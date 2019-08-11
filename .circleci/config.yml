@@ -1,0 +1,19 @@
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@4.0.1
+jobs:
+  tests:
+    docker:
+      - image: bayesimpact/circleci
+    working_directory: /adonis-lucid
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Run tests
+          command: docker-compose -f docker-compose.yml -f docker-compose-test.yml run --rm test
+workflows:
+  version: 2.1
+  workflow:
+    jobs:
+      - tests

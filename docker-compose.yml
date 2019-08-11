@@ -1,0 +1,58 @@
+version: '3.4'
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: lucid
+      MYSQL_USER: virk
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+  mysql_read:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: lucid
+      MYSQL_USER: virk
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3304:3306
+    expose:
+      - '3306'
+  pg:
+    image: postgres:11
+    restart: always
+    environment:
+      POSTGRES_DB: lucid
+      POSTGRES_USER: virk
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+  pg_read:
+    image: postgres:11
+    restart: always
+    environment:
+      POSTGRES_DB: lucid
+      POSTGRES_USER: virk
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5430:5432
+  mssql:
+    image: microsoft/mssql-server-linux:2017-latest
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: 'arandom&233password'
+      ACCEPT_EULA: 'true'
+  mssql_read:
+    image: microsoft/mssql-server-linux:2017-latest
+    ports:
+      - 1431:1433
+    environment:
+      SA_PASSWORD: 'arandom&233password'
+      ACCEPT_EULA: 'true'

@@ -1,0 +1,85 @@
+{
+  "name": "knex-dynamic-connection",
+  "version": "0.0.0",
+  "description": "Adds support for dynamically returning connection config for knex queries",
+  "scripts": {
+    "mrm": "mrm --preset=@adonisjs/mrm-preset",
+    "pretest": "npm run lint",
+    "prepublishOnly": "npm run build",
+    "test:mysql": "DB=mysql node japaFile.js",
+    "test:mysql2": "DB=mysql2 node japaFile.js",
+    "test:mssql": "DB=mssql node japaFile.js",
+    "test:pg": "DB=pg node japaFile.js",
+    "test:docker": "npm run test:mysql && npm run test:mysql2 && npm run test:mssql && npm run test:pg",
+    "docker:build": "docker-compose -f docker-compose.yml -f docker-compose-test.yml build",
+    "test": "npm run docker:build && docker-compose -f docker-compose.yml -f docker-compose-test.yml run --rm test",
+    "lint": "tslint --project tsconfig.json",
+    "clean": "del build",
+    "compile": "npm run lint && npm run clean && tsc",
+    "build": "npm run compile",
+    "commit": "git-cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/thetutlage/knex-dynamic-connection.git"
+  },
+  "keywords": [
+    "knex",
+    "db"
+  ],
+  "author": "virk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thetutlage/knex-dynamic-connection/issues"
+  },
+  "homepage": "https://github.com/thetutlage/knex-dynamic-connection#readme",
+  "devDependencies": {
+    "@adonisjs/mrm-preset": "^2.0.3",
+    "@types/node": "^12.7.1",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "del-cli": "^2.0.0",
+    "doctoc": "^1.4.0",
+    "husky": "^3.0.3",
+    "japa": "^2.0.10",
+    "mrm": "^1.2.2",
+    "mssql": "^5.1.0",
+    "mysql": "^2.17.1",
+    "mysql2": "^1.6.5",
+    "pg": "^7.12.1",
+    "pkg-ok": "^2.3.1",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.5.3"
+  },
+  "nyc": {
+    "exclude": [
+      "test"
+    ],
+    "extension": [
+      ".ts"
+    ]
+  },
+  "main": "build/index.js",
+  "files": [
+    "build/src",
+    "build/index.d.ts",
+    "build/index.js"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "doctoc README.md --title='## Table of contents' && git add README.md",
+      "commit-msg": "node ./node_modules/@adonisjs/mrm-preset/validateCommit/conventional/validate.js"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "knex": "^0.19.1"
+  }
+}

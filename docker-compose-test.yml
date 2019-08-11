@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  test:
+    build:
+      context: .
+      target: build-deps
+    links:
+      - mysql
+      - mysql_read
+      - mssql
+      - mssql_read
+      - pg
+      - pg_read
+    command: ["/start.sh"]
