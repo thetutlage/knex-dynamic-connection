@@ -105,8 +105,8 @@ The dialect creates a new connection to the database server, **but uses static c
 I am using Knex.js to write the ORM of https://adonisjs.com/ and will keep a close eye on the releases of Knex to make sure that I incorporate any changes made of the underlying code and keep this module upto date. If knex.js team plans to re-write the entire codebase (which is less likely to happen), then I will pitch this change to be a first class citizen.
 
 
-[circleci-image]: https://img.shields.io/circleci/project/github/git@github.com/thetutlage/master.svg?style=for-the-badge&logo=circleci
-[circleci-url]: https://circleci.com/gh/git@github.com/thetutlage "circleci"
+[circleci-image]: https://img.shields.io/circleci/project/github/thetutlage/knex-dynamic-connection/master.svg?style=for-the-badge&logo=circleci
+[circleci-url]: https://circleci.com/gh/thetutlage/knex-dynamic-connection "circleci"
 
-[npm-image]: https://img.shields.io/npm/v/knex-round-robin-connection.svg?style=for-the-badge&logo=npm
-[npm-url]: https://npmjs.org/package/knex-round-robin-connection "npm"
+[npm-image]: https://img.shields.io/npm/v/knex-dynamic-connection.svg?style=for-the-badge&logo=npm
+[npm-url]: https://npmjs.org/package/knex-dynamic-connection "npm"
