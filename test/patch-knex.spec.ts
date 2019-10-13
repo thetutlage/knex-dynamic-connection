@@ -7,8 +7,8 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
-import * as Knex from 'knex'
+import test from 'japa'
+import Knex from 'knex'
 import { patchKnex } from '../index'
 
 /**

@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import * as Bluebird from 'bluebird'
+import Bluebird from 'bluebird'
 
 /**
  * Copy of `acquireRawConnection` from knex codebase, but instead relies

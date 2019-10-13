@@ -8,7 +8,7 @@
 */
 
 import stream from 'stream'
-import * as Bluebird from 'bluebird'
+import Bluebird from 'bluebird'
 import { isConnectionError } from 'knex/lib/dialects/oracledb/utils'
 
 /**
