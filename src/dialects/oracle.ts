@@ -13,7 +13,7 @@ import Bluebird from 'bluebird'
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection () {
+export function acquireRawConnection (): Promise<any> {
   return new Bluebird((resolver, rejecter) => {
     const settings = this.getRuntimeConnectionSettings()
     this.driver.connect(settings, (err: Error, connection: any) => {

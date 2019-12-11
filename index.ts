@@ -24,10 +24,13 @@ const dialects = {
 }
 
 /**
- * Patches the knex client so that it makes use of a resolver function to resolve
- * the config before making a SQL query.
+ * Patches the knex client so that it makes use of a resolver function to
+ * resolve the config before making a SQL query.
  */
-export function patchKnex (knex: Knex, configFn: (config: Knex.Config) => Knex.ConnectionConfig) {
+export function patchKnex (
+  knex: Knex,
+  configFn: (config: Knex.Config) => Knex.ConnectionConfig,
+): void {
   const client = knex.client
   const clientName = resolveClientNameWithAliases(client.config.client)
 
@@ -43,15 +46,15 @@ export function patchKnex (knex: Knex, configFn: (config: Knex.Config) => Knex.C
    * base, with just handful of following changes.
    *
    * 1. Using `new Promise` vs `Bluebird.try`.
-   * 2. Uses `client.getRuntimeConnectionSettings` vs `client.connectionSettings` to
-   *    get a new connection host for read replicas.
+   * 2. Use `client.getRuntimeConnectionSettings` vs `client.connectionSettings`
+   *    to get a new connection host for read replicas.
    */
   client.acquireRawConnection = require(`./src/dialects/${dialects[clientName]}`).acquireRawConnection
 
   /**
    * Returns a dynamic connection to be used for each query
    */
-  client.getRuntimeConnectionSettings = function getRuntimeConnectionSettings () {
+  client.getRuntimeConnectionSettings = function getRuntimeConnectionSettings (): Knex.ConnectionConfig {
     return configFn(this.config)
   }
 }

@@ -14,7 +14,7 @@ import { patchKnex } from '../index'
 /**
  * Sleep for a given time
  */
-function sleep (time: number) {
+function sleep (time: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 

@@ -11,7 +11,8 @@
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection () {
+/* eslint no-shadow: "off" */
+export function acquireRawConnection (): Promise<any> {
   const client = this
 
   return new Promise((resolver, rejecter) => {
@@ -39,8 +40,8 @@ export function acquireRawConnection () {
       resolver(connection)
     })
   })
-  .then(function setSearchPath (connection) {
-    client.setSchemaSearchPath(connection)
-    return connection
-  })
+    .then(function setSearchPath (connection) {
+      client.setSchemaSearchPath(connection)
+      return connection
+    })
 }

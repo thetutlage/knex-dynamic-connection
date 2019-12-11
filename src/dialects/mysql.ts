@@ -13,7 +13,7 @@ import Bluebird from 'bluebird'
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection () {
+export function acquireRawConnection (): Promise<any> {
   return new Bluebird((resolver, rejecter) => {
     const connection = this.driver.createConnection(this.getRuntimeConnectionSettings())
     connection.on('error', (err: Error) => {
@@ -22,10 +22,12 @@ export function acquireRawConnection () {
 
     connection.connect((err: Error) => {
       if (err) {
-        // if connection is rejected, remove listener that was registered above...
+        // if connection is rejected, remove listener that was registered
+        // above...
         connection.removeAllListeners()
         return rejecter(err)
       }
+
       resolver(connection)
     })
   })

@@ -14,7 +14,8 @@ import { isConnectionError } from 'knex/lib/dialects/oracledb/utils'
 /**
  * Copied from the source code of knex
  */
-function readStream (stream, cb) {
+/* eslint no-shadow: "off" */
+function readStream (stream, cb): void {
   const oracledb = require('oracledb')
   let data: any = ''
 
@@ -45,7 +46,7 @@ function readStream (stream, cb) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection () {
+export function acquireRawConnection (): Promise<any> {
   const client = this
 
   const asyncConnection = new Bluebird((resolver, rejecter) => {
@@ -78,7 +79,7 @@ export function acquireRawConnection () {
         return rejecter(err)
       }
 
-      connection.commitAsync = function commitAsync () {
+      connection.commitAsync = function commitAsync (): Promise<any> {
         return new Bluebird((commitResolve, commitReject) => {
           if (connection.isTransaction) {
             return commitResolve()
@@ -92,7 +93,7 @@ export function acquireRawConnection () {
         })
       }
 
-      connection.rollbackAsync = function rollbackAsync () {
+      connection.rollbackAsync = function rollbackAsync (): Promise<any> {
         return new Bluebird((rollbackResolve, rollbackReject) => {
           this.rollback((err: Error) => {
             if (err) {
@@ -103,7 +104,7 @@ export function acquireRawConnection () {
         })
       }
 
-      const fetchAsync = function fetchAsync (sql, bindParams, options, cb) {
+      const fetchAsync = function fetchAsync (sql, bindParams, options, cb): any {
         options = options || {}
         options.outFormat = client.driver.OBJECT
 
@@ -119,7 +120,7 @@ export function acquireRawConnection () {
             const fetchResult = { rows: [], resultSet: result.resultSet }
             const numRows = 100
 
-            const fetchRowsFromRS = function fetchRowsFromRS (connection, resultSet, numRows) {
+            const fetchRowsFromRS = function fetchRowsFromRS (connection, resultSet, numRows): any {
               resultSet.getRows(numRows, (err, rows) => {
                 if (err) {
                   if (isConnectionError(err)) {
@@ -149,7 +150,7 @@ export function acquireRawConnection () {
         }
       }
 
-      connection.executeAsync = function executeAsync (sql, bindParams, options) {
+      connection.executeAsync = function executeAsync (sql, bindParams, options): any {
         // Read all lob
         return new Bluebird((resultResolve, resultReject) => {
           fetchAsync(sql, bindParams, options, (err, results) => {
