@@ -35,24 +35,24 @@
   },
   "homepage": "https://github.com/thetutlage/knex-dynamic-connection#readme",
   "devDependencies": {
-    "@adonisjs/mrm-preset": "^2.2.2",
-    "@types/node": "^12.12.17",
+    "@adonisjs/mrm-preset": "^2.2.3",
+    "@types/node": "^13.1.4",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
     "del-cli": "^3.0.0",
     "doctoc": "^1.4.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-adonis": "^1.0.2",
-    "husky": "^3.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-adonis": "^1.0.5",
+    "husky": "^4.0.0",
     "japa": "^3.0.1",
-    "mrm": "^2.0.1",
+    "mrm": "^2.0.2",
     "mssql": "^6.0.1",
     "mysql": "^2.17.1",
-    "mysql2": "^2.0.2",
+    "mysql2": "^2.1.0",
     "np": "^5.2.1",
-    "pg": "^7.14.0",
+    "pg": "^7.17.0",
     "ts-node": "^8.5.4",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.4"
   },
   "nyc": {
     "exclude": [
@@ -81,7 +81,7 @@
   },
   "dependencies": {
     "bluebird": "^3.7.2",
-    "knex": "^0.20.4"
+    "knex": "^0.20.7"
   },
   "np": {
     "contents": ".",
