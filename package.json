@@ -1,6 +1,6 @@
 {
   "name": "knex-dynamic-connection",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Adds support for dynamically returning connection config for knex queries",
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
