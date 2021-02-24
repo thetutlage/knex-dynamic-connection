@@ -1,5 +1,8 @@
 {
   "extends": [
     "plugin:adonis/typescriptPackage"
-  ]
+  ],
+  "rules": {
+    "@typescript-eslint/no-shadow": ["off"]
+  }
 }
