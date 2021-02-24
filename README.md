@@ -104,6 +104,8 @@ The dialect creates a new connection to the database server, **but uses static c
 ## Will this work in the future?
 I am using Knex.js to write the ORM of https://adonisjs.com/ and will keep a close eye on the releases of Knex to make sure that I incorporate any changes made of the underlying code and keep this module upto date. If knex.js team plans to re-write the entire codebase (which is less likely to happen), then I will pitch this change to be a first class citizen.
 
+## Can I help?
+Yes, there are currently no tests for oracle. It will be great, if you can help set it up using docker
 
 [circleci-image]: https://img.shields.io/circleci/project/github/thetutlage/knex-dynamic-connection/master.svg?style=for-the-badge&logo=circleci
 [circleci-url]: https://circleci.com/gh/thetutlage/knex-dynamic-connection "circleci"
