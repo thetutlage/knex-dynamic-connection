@@ -15,9 +15,9 @@
 export function acquireRawConnection (): Promise<any> {
   const client = this
 
-  return new Promise((resolver, rejecter) => {
+  return new Promise(function (resolver, rejecter) {
     const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
-    connection.connect((err: Error, connection: any) => {
+    connection.connect(function (err: Error, connection: any) {
       if (err) {
         return rejecter(err)
       }
@@ -31,7 +31,7 @@ export function acquireRawConnection (): Promise<any> {
       })
 
       if (!client.version) {
-        return client.checkVersion(connection).then((version: string) => {
+        return client.checkVersion(connection).then(function (version: string) {
           client.version = version
           resolver(connection)
         })

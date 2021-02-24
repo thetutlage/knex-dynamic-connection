@@ -7,6 +7,32 @@
 * file that was distributed with this source code.
 */
 
+/**
+ * ------------------------------------------------------------------
+ * Source of truth
+ * ------------------------------------------------------------------
+ *
+ * Since, we are patching a part of the knex codebase, let's keep this
+ * block as a source of truth around what is happening
+ *
+ * Last modified: 25th Feb, 2021
+ *
+ * The MYSQL2 dialect of knex instead the MYSQL dialect. Therefore the patch
+ * function for both the dialects is same. ('./src/dialects/mysql.ts')
+ * https://github.com/knex/knex/blob/master/lib/dialects/mysql2/index.js
+ *
+ * MSSQL needs a little more changes. 99% code is still a copy/paste. It's
+ * just we have to copy/paste more code.
+ *
+ * PostgreSQL is simple and just requires one line of change. Redshit extends
+ * PostgreSQL, so the patch function for both is same
+ *
+ * SQLITE doesn't have a concept of read/write replicas
+ *
+ * OrcaleDB is a beast. We have literally copy a lot of code. The good thing is,
+ * we still have one line of code change. Rest is just a copy/paste
+ */
+
 import * as Knex from 'knex'
 import { resolveClientNameWithAliases } from 'knex/lib/helpers'
 
@@ -17,10 +43,9 @@ const dialects = {
   mssql: 'mssql',
   mysql: 'mysql',
   mysql2: 'mysql',
-  oracle: 'oracle',
   oracledb: 'oracledb',
   postgres: 'pg',
-  redshift: 'redshift',
+  redshift: 'pg',
 }
 
 /**
@@ -42,11 +67,19 @@ export function patchKnex (
   }
 
   /**
+   * Do not patch for oracle. The dialect is dead in the knex code as
+   * well.
+   * https://github.com/knex/knex/blob/master/lib/dialects/oracle/DEAD_CODE.md
+   */
+  if (clientName === 'oracle') {
+    return
+  }
+
+  /**
    * This function is the exact copy of acquire connection from the knex code
    * base, with just handful of following changes.
    *
-   * 1. Using `new Promise` vs `Bluebird.try`.
-   * 2. Use `client.getRuntimeConnectionSettings` vs `client.connectionSettings`
+   * 1. Uses `client.getRuntimeConnectionSettings` vs `client.connectionSettings`
    *    to get a new connection host for read replicas.
    */
   client.acquireRawConnection = require(`./src/dialects/${dialects[clientName]}`).acquireRawConnection
