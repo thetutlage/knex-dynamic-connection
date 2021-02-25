@@ -29,7 +29,7 @@
  *
  * SQLITE doesn't have a concept of read/write replicas
  *
- * OrcaleDB is a beast. We have literally copy a lot of code. The good thing is,
+ * OracleDB is a beast. We have literally copy a lot of code. The good thing is,
  * we still have one line of code change. Rest is just a copy/paste
  */
 
