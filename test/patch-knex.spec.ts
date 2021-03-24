@@ -240,7 +240,7 @@ test.group('Patch knex', (group) => {
     const users = await knexInstance.table('users').select('*')
 
     await sleep(1000)
-    await knex('users').truncate()
+    await knexInstance('users').truncate()
 
     assert.lengthOf(users, 0)
   }).timeout(6000)
