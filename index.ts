@@ -33,8 +33,8 @@
  * we still have one line of code change. Rest is just a copy/paste
  */
 
-import * as Knex from 'knex'
-import { resolveClientNameWithAliases } from 'knex/lib/helpers'
+import { Knex } from 'knex'
+import { resolveClientNameWithAliases } from 'knex/lib/util/helpers'
 
 /**
  * Dialects with their `acquireRawConnection` implementation
