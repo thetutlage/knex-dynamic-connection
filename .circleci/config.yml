@@ -1,14 +1,15 @@
 version: 2.1
 orbs:
-  aws-ecr: circleci/aws-ecr@4.0.1
+  aws-ecr: circleci/aws-ecr@6.15.3
 jobs:
   tests:
     docker:
       - image: bayesimpact/circleci
-    working_directory: /adonis-lucid
+    working_directory: /knex-dynamic-connection
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 19.03.13
       - run:
           name: Run tests
           command: docker-compose -f docker-compose.yml -f docker-compose-test.yml run --rm test
