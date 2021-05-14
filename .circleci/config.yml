@@ -5,7 +5,7 @@ jobs:
   tests:
     docker:
       - image: bayesimpact/circleci
-    working_directory: /knex-dynamic-connection
+    working_directory: knex-dynamic-connection
     steps:
       - checkout
       - setup_remote_docker:
