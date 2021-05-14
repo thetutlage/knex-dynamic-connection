@@ -2,7 +2,7 @@
 
 This module is meant to patch knex and add support for defining dynamic connection configuration.
 
-[![circleci-image]][circleci-url] [![npm-image]][npm-url] ![](https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript)
+[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![](https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -107,8 +107,8 @@ I am using Knex.js to write the ORM of https://adonisjs.com/ and will keep a clo
 ## Can I help?
 Yes, there are currently no tests for oracle. It will be great, if you can help set it up using docker
 
-[circleci-image]: https://img.shields.io/circleci/project/github/thetutlage/knex-dynamic-connection/master.svg?style=for-the-badge&logo=circleci
-[circleci-url]: https://circleci.com/gh/thetutlage/knex-dynamic-connection "circleci"
+[gh-workflow-image]: https://img.shields.io/github/workflow/status/thetutlage/knex-dynamic-connection/test?style=for-the-badge
+[gh-workflow-url]: https://github.com/thetutlage/knex-dynamic-connection/actions/workflows/test.yml "Github action"
 
 [npm-image]: https://img.shields.io/npm/v/knex-dynamic-connection.svg?style=for-the-badge&logo=npm
 [npm-url]: https://npmjs.org/package/knex-dynamic-connection "npm"
