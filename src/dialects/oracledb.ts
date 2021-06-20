@@ -95,7 +95,7 @@ export function acquireRawConnection(): Promise<any> {
   const client = this
 
   const asyncConnection = new Promise(function (resolver, rejecter) {
-    const settings = this.getRuntimeConnectionSettings()
+    const settings = client.getRuntimeConnectionSettings()
 
     // If external authentication don't have to worry about username/password and
     // if not need to set the username and password
