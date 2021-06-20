@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /*
  * knex-dynamic-connection
  *
