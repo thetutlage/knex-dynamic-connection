@@ -1,11 +1,11 @@
 /*
-* knex-dynamic-connection
-*
-* (c) Harminder Virk <virk@adonisjs.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * knex-dynamic-connection
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
  * ------------------------------------------------------------------
@@ -52,9 +52,9 @@ const dialects = {
  * Patches the knex client so that it makes use of a resolver function to
  * resolve the config before making a SQL query.
  */
-export function patchKnex (
+export function patchKnex(
   knex: Knex,
-  configFn: (config: Knex.Config) => Knex.ConnectionConfig,
+  configFn: (config: Knex.Config) => Knex.ConnectionConfig
 ): void {
   const client = knex.client
   const clientName = resolveClientNameWithAliases(client.config.client)
@@ -82,12 +82,14 @@ export function patchKnex (
    * 1. Uses `client.getRuntimeConnectionSettings` vs `client.connectionSettings`
    *    to get a new connection host for read replicas.
    */
-  client.acquireRawConnection = require(`./src/dialects/${dialects[clientName]}`).acquireRawConnection
+  client.acquireRawConnection =
+    require(`./src/dialects/${dialects[clientName]}`).acquireRawConnection
 
   /**
    * Returns a dynamic connection to be used for each query
    */
-  client.getRuntimeConnectionSettings = function getRuntimeConnectionSettings (): Knex.ConnectionConfig {
-    return configFn(this.config)
-  }
+  client.getRuntimeConnectionSettings =
+    function getRuntimeConnectionSettings(): Knex.ConnectionConfig {
+      return configFn(this.config)
+    }
 }

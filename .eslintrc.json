@@ -1,8 +1,17 @@
 {
   "extends": [
-    "plugin:adonis/typescriptPackage"
+    "plugin:adonis/typescriptPackage",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
   ],
   "rules": {
-    "@typescript-eslint/no-shadow": ["off"]
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   }
 }

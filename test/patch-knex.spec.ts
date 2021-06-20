@@ -1,11 +1,11 @@
 /*
-* knex-dynamic-connection
-*
-* (c) Harminder Virk <virk@adonisjs.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * knex-dynamic-connection
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 import test from 'japa'
 import { Knex, default as knex } from 'knex'
@@ -14,11 +14,11 @@ import { patchKnex } from '../index'
 /**
  * Sleep for a given time
  */
-function sleep (time: number): Promise<void> {
+function sleep(time: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 
-function getKnexConfig (): Knex.Config {
+function getKnexConfig(): Knex.Config {
   switch (process.env.DB) {
     case 'pg':
       return {
@@ -83,7 +83,7 @@ function getKnexConfig (): Knex.Config {
   }
 }
 
-function getKnexConfigReplica (): Knex.Config {
+function getKnexConfigReplica(): Knex.Config {
   switch (process.env.DB) {
     case 'pg':
       return {

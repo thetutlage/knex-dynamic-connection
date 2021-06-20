@@ -11,4 +11,4 @@ services:
       - mssql_read
       - pg
       - pg_read
-    command: ["/start.sh"]
+    command: ['/start.sh']

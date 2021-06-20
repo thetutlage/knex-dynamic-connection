@@ -1,18 +1,18 @@
 /*
-* knex-dynamic-connection
-*
-* (c) Harminder Virk <virk@adonisjs.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * knex-dynamic-connection
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
 /* eslint no-shadow: "off" */
-export function acquireRawConnection (): Promise<any> {
+export function acquireRawConnection(): Promise<any> {
   const client = this
 
   return new Promise(function (resolver, rejecter) {
@@ -39,9 +39,8 @@ export function acquireRawConnection (): Promise<any> {
 
       resolver(connection)
     })
+  }).then(function setSearchPath(connection) {
+    client.setSchemaSearchPath(connection)
+    return connection
   })
-    .then(function setSearchPath (connection) {
-      client.setSchemaSearchPath(connection)
-      return connection
-    })
 }

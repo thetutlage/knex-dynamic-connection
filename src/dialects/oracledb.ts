@@ -1,11 +1,11 @@
 /*
-* knex-dynamic-connection
-*
-* (c) Harminder Virk <virk@adonisjs.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * knex-dynamic-connection
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 import stream from 'stream'
 import { promisify } from 'util'
@@ -50,7 +50,7 @@ const lobProcessing = function (stream) {
  * Copy/pasted as it is from
  * https://github.com/knex/knex/blob/master/lib/dialects/oracledb/index.js#L424
  */
-function resolveConnectString (connectionSettings: any) {
+function resolveConnectString(connectionSettings: any) {
   if (connectionSettings.connectString) {
     return connectionSettings.connectString
   }
@@ -59,20 +59,14 @@ function resolveConnectString (connectionSettings: any) {
     return connectionSettings.host + '/' + connectionSettings.database
   }
 
-  return (
-    connectionSettings.host +
-    ':' +
-    connectionSettings.port +
-    '/' +
-    connectionSettings.database
-  )
+  return connectionSettings.host + ':' + connectionSettings.port + '/' + connectionSettings.database
 }
 
 /**
  * Copy/pasted as it is from
  * https://github.com/knex/knex/blob/master/lib/dialects/oracledb/index.js#L442
  */
-function readStream (stream, type) {
+function readStream(stream, type) {
   return new Promise((resolve, reject) => {
     let data = type === 'string' ? '' : Buffer.alloc(0)
 
@@ -96,7 +90,7 @@ function readStream (stream, type) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection (): Promise<any> {
+export function acquireRawConnection(): Promise<any> {
   const client = this
 
   const asyncConnection = new Promise(function (resolver, rejecter) {
@@ -107,9 +101,9 @@ export function acquireRawConnection (): Promise<any> {
     const oracleDbConfig = settings.externalAuth
       ? { externalAuth: settings.externalAuth }
       : {
-        user: settings.user,
-        password: settings.password,
-      }
+          user: settings.user,
+          password: settings.password,
+        }
 
     // In the case of external authentication connection string will be given
     oracleDbConfig['connectString'] = resolveConnectString(settings)
@@ -161,72 +155,58 @@ export function acquireRawConnection (): Promise<any> {
         }
 
         if (options.resultSet) {
-          connection.execute(
-            sql,
-            bindParams || [],
-            options,
-            function (err: Error, result: any) {
-              if (err) {
-                if (isConnectionError(err)) {
-                  connection.close().catch(function () {})
-                  connection.__knex__disposed = err
-                }
-                return cb(err)
+          connection.execute(sql, bindParams || [], options, function (err: Error, result: any) {
+            if (err) {
+              if (isConnectionError(err)) {
+                connection.close().catch(function () {})
+                connection.__knex__disposed = err
               }
+              return cb(err)
+            }
 
-              const fetchResult = { rows: [], resultSet: result.resultSet }
-              const numRows = 100
+            const fetchResult = { rows: [], resultSet: result.resultSet }
+            const numRows = 100
 
-              const fetchRowsFromRS = function (
-                connection: any,
-                resultSet: any,
-                numRows: any
-              ) {
-                resultSet.getRows(numRows, function (err: Error, rows: any) {
-                  if (err) {
-                    if (isConnectionError(err)) {
-                      connection.close().catch(function () {})
-                      connection.__knex__disposed = err
-                    }
-
-                    resultSet.close(function () {
-                      return cb(err)
-                    })
-                  } else if (rows.length === 0) {
-                    return cb(null, fetchResult)
-                  } else if (rows.length > 0) {
-                    if (rows.length === numRows) {
-                      fetchResult.rows = fetchResult.rows.concat(rows)
-                      fetchRowsFromRS(connection, resultSet, numRows)
-                    } else {
-                      fetchResult.rows = fetchResult.rows.concat(rows)
-                      return cb(null, fetchResult)
-                    }
+            const fetchRowsFromRS = function (connection: any, resultSet: any, numRows: any) {
+              resultSet.getRows(numRows, function (err: Error, rows: any) {
+                if (err) {
+                  if (isConnectionError(err)) {
+                    connection.close().catch(function () {})
+                    connection.__knex__disposed = err
                   }
-                })
-              }
 
-              fetchRowsFromRS(connection, result.resultSet, numRows)
-            }
-          )
-        } else {
-          connection.execute(
-            sql,
-            bindParams || [],
-            options,
-            function (err: Error, result: any) {
-              if (err) {
-                // dispose the connection on connection error
-                if (isConnectionError(err)) {
-                  connection.close().catch(function () {})
-                  connection.__knex__disposed = err
+                  resultSet.close(function () {
+                    return cb(err)
+                  })
+                } else if (rows.length === 0) {
+                  return cb(null, fetchResult)
+                } else if (rows.length > 0) {
+                  if (rows.length === numRows) {
+                    fetchResult.rows = fetchResult.rows.concat(rows)
+                    fetchRowsFromRS(connection, resultSet, numRows)
+                  } else {
+                    fetchResult.rows = fetchResult.rows.concat(rows)
+                    return cb(null, fetchResult)
+                  }
                 }
-                return cb(err)
-              }
-
-              return cb(null, result)
+              })
             }
-          )
+
+            fetchRowsFromRS(connection, result.resultSet, numRows)
+          })
+        } else {
+          connection.execute(sql, bindParams || [], options, function (err: Error, result: any) {
+            if (err) {
+              // dispose the connection on connection error
+              if (isConnectionError(err)) {
+                connection.close().catch(function () {})
+                connection.__knex__disposed = err
+              }
+              return cb(err)
+            }
+
+            return cb(null, result)
+          })
         }
       })
 
@@ -258,9 +238,7 @@ export function acquireRawConnection (): Promise<any> {
           try {
             for (const lob of lobs) {
               // todo should be fetchAsString/fetchAsBuffer polyfill only
-              results.rows[lob.index][lob.key] = await lobProcessing(
-                lob.stream
-              )
+              results.rows[lob.index][lob.key] = await lobProcessing(lob.stream)
             }
           } catch (e) {
             await closeResultSet().catch(() => {})

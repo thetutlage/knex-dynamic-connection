@@ -1,15 +1,15 @@
 /*
-* knex-dynamic-connection
-*
-* (c) Harminder Virk <virk@adonisjs.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * knex-dynamic-connection
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 const debug = require('debug')('knex:patched:mssql')
 
-function isNil (value: any): boolean {
+function isNil(value: any): boolean {
   return value !== undefined && value !== null
 }
 
@@ -21,7 +21,7 @@ function isNil (value: any): boolean {
  * please report it to us. Right now, this method is pure.
  * Also, ignore "this.connectionSettings"
  */
-function generateConnection (settings: any) {
+function generateConnection(settings: any) {
   settings.options = settings.options || {}
 
   /** @type {import('tedious').ConnectionConfig} */
@@ -45,9 +45,7 @@ function generateConnection (settings: any) {
       encrypt: settings.encrypt || false,
       port: settings.port || 1433,
       connectTimeout: settings.connectionTimeout || settings.timeout || 15000,
-      requestTimeout: !isNil(settings.requestTimeout)
-        ? settings.requestTimeout
-        : 15000,
+      requestTimeout: !isNil(settings.requestTimeout) ? settings.requestTimeout : 15000,
       rowCollectionOnDone: false,
       rowCollectionOnRequestCompletion: false,
       useColumnNames: false,
@@ -90,7 +88,7 @@ function generateConnection (settings: any) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection (): Promise<any> {
+export function acquireRawConnection(): Promise<any> {
   return new Promise((resolver, rejecter) => {
     debug('connection::connection new connection requested')
 

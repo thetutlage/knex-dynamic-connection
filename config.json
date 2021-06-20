@@ -1,7 +1,13 @@
 {
   "core": false,
-  "ts": true,
   "license": "MIT",
-  "services": [],
-  "minNodeVersion": "10.15.3"
+  "services": [
+    "github-actions"
+  ],
+  "minNodeVersion": "14.15.4",
+  "probotApps": [
+    "stale",
+    "lock"
+  ],
+  "runGhActionsOnWindows": false
 }
