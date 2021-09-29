@@ -16,7 +16,7 @@ This module is meant to patch knex and add support for defining dynamic connecti
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Why you need it?
-Knex.js doesn't have inbuilt support for read/write connections. One can create two seperate instances of knex for read and write, but that still doesn't completely solves the problem. For example:
+Knex.js doesn't have inbuilt support for read/write connections. One can create two seperate instances of knex for read and write, but that still doesn't completely solve the problem. For example:
 
 ```js
 const Knex = require('knex')
