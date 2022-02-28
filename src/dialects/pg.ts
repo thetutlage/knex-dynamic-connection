@@ -15,14 +15,11 @@
 /* eslint no-shadow: "off" */
 export function acquireRawConnection(): Promise<any> {
   const client = this
+  const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
 
-  return new Promise(function (resolver, rejecter) {
-    const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
-    connection.connect(function (err: Error, connection: any) {
-      if (err) {
-        return rejecter(err)
-      }
-
+  return connection
+    .connect()
+    .then(() => {
       connection.on('error', (err: Error) => {
         connection.__knex__disposed = err
       })
@@ -34,14 +31,14 @@ export function acquireRawConnection(): Promise<any> {
       if (!client.version) {
         return client.checkVersion(connection).then(function (version: string) {
           client.version = version
-          resolver(connection)
+          return connection
         })
       }
 
-      resolver(connection)
+      return connection
     })
-  }).then(function setSearchPath(connection) {
-    client.setSchemaSearchPath(connection)
-    return connection
-  })
+    .then(function setSearchPath(connection) {
+      client.setSchemaSearchPath(connection)
+      return connection
+    })
 }

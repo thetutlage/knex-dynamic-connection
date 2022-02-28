@@ -51,6 +51,7 @@ function generateConnection(settings: any) {
       useColumnNames: false,
       tdsVersion: settings.options.tdsVersion || '7_4',
       appName: settings.options.appName || 'knex',
+      trustServerCertificate: false,
       ...settings.options,
     },
   }
