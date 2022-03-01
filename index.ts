@@ -62,7 +62,7 @@ export function patchKnex(
   /**
    * Do not patch for sqlite3
    */
-  if (clientName === 'sqlite3') {
+  if (['sqlite3', 'better-sqlite3'].includes(clientName)) {
     return
   }
 
