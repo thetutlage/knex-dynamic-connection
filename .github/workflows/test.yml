@@ -93,3 +93,33 @@ jobs:
         run: npm install
       - name: Run Mysql Tests
         run: npm run test:mysql
+  test-mssql:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16]
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          SA_PASSWORD: 'arandom&233password'
+          ACCEPT_EULA: 'Y'
+        ports:
+          - '1433:1433'
+      mssql_replica:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          SA_PASSWORD: 'arandom&233password'
+          ACCEPT_EULA: 'Y'
+        ports:
+          - '1434:1433'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+      - name: Run Mssql Tests
+        run: npm run test:mssql
