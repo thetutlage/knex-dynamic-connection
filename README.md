@@ -107,7 +107,7 @@ I am using Knex.js to write the ORM of https://adonisjs.com/ and will keep a clo
 ## Can I help?
 Yes, there are currently no tests for oracle. It will be great, if you can help set it up using docker
 
-[gh-workflow-image]: https://img.shields.io/github/workflow/status/thetutlage/knex-dynamic-connection/test?style=for-the-badge
+[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/thetutlage/knex-dynamic-connection/test.yml?style=for-the-badge
 [gh-workflow-url]: https://github.com/thetutlage/knex-dynamic-connection/actions/workflows/test.yml "Github action"
 
 [npm-image]: https://img.shields.io/npm/v/knex-dynamic-connection.svg?style=for-the-badge&logo=npm
