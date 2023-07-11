@@ -63,11 +63,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mysql: [5.7]
+        mysql: [{ version: 5.7, command: 'test:mysql' }, { version: 5.7, command: 'test:mysql2' }]
         node-version: [16]
     services:
       mysql:
-        image: mysql:${{ matrix.mysql }}
+        image: mysql:${{ matrix.mysql.version }}
         env:
           MYSQL_DATABASE: patch_knex
           MYSQL_USER: virk
@@ -76,7 +76,7 @@ jobs:
         ports:
           - '3306:3306'
       mysql_replica:
-        image: mysql:${{ matrix.mysql }}
+        image: mysql:${{ matrix.mysql.version }}
         env:
           MYSQL_DATABASE: patch_knex
           MYSQL_USER: virk
@@ -92,7 +92,7 @@ jobs:
       - name: Install
         run: npm install
       - name: Run Mysql Tests
-        run: npm run test:mysql
+        run: npm run ${{command}}
   test-mssql:
     runs-on: ubuntu-latest
     strategy:
