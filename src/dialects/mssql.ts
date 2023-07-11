@@ -8,6 +8,7 @@
  */
 
 const debug = require('debug')('knex:patched:mssql')
+import { setHiddenProperty } from 'knex/lib/util/security.js'
 
 function isNil(value: any): boolean {
   return value !== undefined && value !== null
@@ -54,6 +55,10 @@ function generateConnection(settings: any) {
       trustServerCertificate: false,
       ...settings.options,
     },
+  }
+
+  if (cfg.authentication.options.password) {
+    setHiddenProperty(cfg.authentication.options)
   }
 
   // tedious always connect via tcp when port is specified

@@ -9,7 +9,11 @@
 
 import test from 'japa'
 import { Knex, default as knex } from 'knex'
+import { setHiddenProperty } from 'knex/lib/util/security.js'
+
 import { patchKnex } from '../index'
+
+require('dotenv').config()
 
 /**
  * Sleep for a given time
@@ -19,16 +23,16 @@ function sleep(time: number): Promise<void> {
 }
 
 function getKnexConfig(): Knex.Config {
-  switch (process.env.DB) {
+  switch (process.env.DIALECT) {
     case 'pg':
       return {
         client: 'pg',
         connection: {
-          host: 'pg',
-          port: 5432,
-          user: 'virk',
-          database: 'lucid',
-          password: 'password',
+          host: process.env.PG_HOST,
+          port: Number(process.env.PG_PORT),
+          user: process.env.PG_USER,
+          database: process.env.PG_DATABASE,
+          password: process.env.PG_PASSWORD,
         },
         pool: {
           min: 0,
@@ -39,11 +43,11 @@ function getKnexConfig(): Knex.Config {
       return {
         client: 'mysql',
         connection: {
-          host: 'mysql',
-          port: 3306,
-          user: 'virk',
-          database: 'lucid',
-          password: 'password',
+          host: process.env.LEGACY_MYSQL_HOST,
+          port: Number(process.env.LEGACY_MYSQL_PORT),
+          user: process.env.LEGACY_MYSQL_USER,
+          database: process.env.LEGACY_MYSQL_DATABASE,
+          password: process.env.LEGACY_MYSQL_PASSWORD,
         },
         pool: {
           min: 0,
@@ -54,11 +58,11 @@ function getKnexConfig(): Knex.Config {
       return {
         client: 'mysql2',
         connection: {
-          host: 'mysql',
-          port: 3306,
-          user: 'virk',
-          database: 'lucid',
-          password: 'password',
+          host: process.env.LEGACY_MYSQL_HOST,
+          port: Number(process.env.LEGACY_MYSQL_PORT),
+          user: process.env.LEGACY_MYSQL_USER,
+          database: process.env.LEGACY_MYSQL_DATABASE,
+          password: process.env.LEGACY_MYSQL_PASSWORD,
         },
         pool: {
           min: 0,
@@ -69,9 +73,10 @@ function getKnexConfig(): Knex.Config {
       return {
         client: 'mssql',
         connection: {
-          user: 'sa',
-          server: 'mssql',
-          password: 'arandom&233password',
+          server: process.env.MSSQL_HOST,
+          port: Number(process.env.MSSQL_PORT),
+          user: process.env.MSSQL_USER,
+          password: process.env.MSSQL_PASSWORD,
         },
         pool: {
           min: 0,
@@ -79,21 +84,21 @@ function getKnexConfig(): Knex.Config {
         },
       }
     default:
-      throw new Error('Define process.env.DB before running tests')
+      throw new Error('Define process.env.DIALECT before running tests')
   }
 }
 
 function getKnexConfigReplica(): Knex.Config {
-  switch (process.env.DB) {
+  switch (process.env.DIALECT) {
     case 'pg':
       return {
         client: 'pg',
         connection: {
-          host: 'pg_read',
-          port: 5432,
-          user: 'virk',
-          database: 'lucid',
-          password: 'password',
+          host: process.env.PG_READ_REPLICA_HOST,
+          port: Number(process.env.PG_READ_REPLICA_PORT),
+          user: process.env.PG_READ_REPLICA_USER,
+          database: process.env.PG_READ_REPLICA_DATABASE,
+          password: process.env.PG_READ_REPLICA_PASSWORD,
         },
         pool: {
           min: 0,
@@ -104,11 +109,11 @@ function getKnexConfigReplica(): Knex.Config {
       return {
         client: 'mysql',
         connection: {
-          host: 'mysql_read',
-          port: 3306,
-          user: 'virk',
-          database: 'lucid',
-          password: 'password',
+          host: process.env.LEGACY_MYSQL_READ_REPLICA_HOST,
+          port: Number(process.env.LEGACY_MYSQL_READ_REPLICA_PORT),
+          user: process.env.LEGACY_MYSQL_READ_REPLICA_USER,
+          database: process.env.LEGACY_MYSQL_READ_REPLICA_DATABASE,
+          password: process.env.LEGACY_MYSQL_READ_REPLICA_PASSWORD,
         },
         pool: {
           min: 0,
@@ -119,11 +124,11 @@ function getKnexConfigReplica(): Knex.Config {
       return {
         client: 'mysql2',
         connection: {
-          host: 'mysql_read',
-          port: 3306,
-          user: 'virk',
-          database: 'lucid',
-          password: 'password',
+          host: process.env.LEGACY_MYSQL_READ_REPLICA_HOST,
+          port: Number(process.env.LEGACY_MYSQL_READ_REPLICA_PORT),
+          user: process.env.LEGACY_MYSQL_READ_REPLICA_USER,
+          database: process.env.LEGACY_MYSQL_READ_REPLICA_DATABASE,
+          password: process.env.LEGACY_MYSQL_READ_REPLICA_PASSWORD,
         },
         pool: {
           min: 0,
@@ -134,10 +139,10 @@ function getKnexConfigReplica(): Knex.Config {
       return {
         client: 'mssql',
         connection: {
-          server: 'mssql_read',
-          port: 1433,
-          user: 'sa',
-          password: 'arandom&233password',
+          server: process.env.MSSQL_READ_REPLICA_HOST,
+          port: Number(process.env.MSSQL_READ_REPLICA_PORT),
+          user: process.env.MSSQL_READ_REPLICA_USER,
+          password: process.env.MSSQL_READ_REPLICA_PASSWORD,
         },
         pool: {
           min: 0,
@@ -145,12 +150,15 @@ function getKnexConfigReplica(): Knex.Config {
         },
       }
     default:
-      throw new Error('Define process.env.DB before running tests')
+      throw new Error('Define process.env.DIALECT before running tests')
   }
 }
 
 test.group('Patch knex', (group) => {
   group.before(async () => {
+    await knex(getKnexConfig()).schema.dropTableIfExists('users')
+    await knex(getKnexConfigReplica()).schema.dropTableIfExists('users')
+
     await knex(getKnexConfig()).schema.createTable('users', (table) => {
       table.increments('id')
       table.string('username')
@@ -169,12 +177,15 @@ test.group('Patch knex', (group) => {
     await knex(getKnexConfigReplica()).schema.dropTable('users')
   })
 
-  test('patch knex client to make use of resolver function for config', async (assert) => {
+  test('pass config to the resolver function', async (assert) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
     patchKnex(knexInstance, (config) => {
-      assert.deepEqual(config.connection, getKnexConfig().connection)
+      const registeredConfig = getKnexConfig().connection
+      setHiddenProperty(registeredConfig)
+
+      assert.deepEqual(config.connection, registeredConfig)
       return config.connection as Knex.ConnectionConfig
     })
 
@@ -186,7 +197,10 @@ test.group('Patch knex', (group) => {
 
     const knexInstance = knex(getKnexConfig())
     patchKnex(knexInstance, (config) => {
-      assert.deepEqual(config.connection, getKnexConfig().connection)
+      const registeredConfig = getKnexConfig().connection
+      setHiddenProperty(registeredConfig)
+
+      assert.deepEqual(config.connection, registeredConfig)
       return config.connection as Knex.ConnectionConfig
     })
 
@@ -198,7 +212,10 @@ test.group('Patch knex', (group) => {
 
     const knexInstance = knex(getKnexConfig())
     patchKnex(knexInstance, (config) => {
-      assert.deepEqual(config.connection, getKnexConfig().connection)
+      const registeredConfig = getKnexConfig().connection
+      setHiddenProperty(registeredConfig)
+
+      assert.deepEqual(config.connection, registeredConfig)
       return config.connection as Knex.ConnectionConfig
     })
 
@@ -210,14 +227,17 @@ test.group('Patch knex', (group) => {
 
     const knexInstance = knex(getKnexConfig())
     patchKnex(knexInstance, (config) => {
-      assert.deepEqual(config.connection, getKnexConfig().connection)
+      const registeredConfig = getKnexConfig().connection
+      setHiddenProperty(registeredConfig)
+
+      assert.deepEqual(config.connection, registeredConfig)
       return config.connection as Knex.ConnectionConfig
     })
 
     await knexInstance.schema.hasTable('users')
   })
 
-  test('make request using resolver connection settings', async (assert) => {
+  test('make requests using resolver connection settings', async (assert) => {
     let counter = 0
 
     const knexInstance = knex(getKnexConfig())
@@ -233,8 +253,9 @@ test.group('Patch knex', (group) => {
     await knexInstance.table('users').insert({ username: 'virk' })
 
     /**
-     * Sleeping for a while, so that the pool will release the unused
-     * connection
+     * Sleeping for a while, so that the pool will releases the unused
+     * connection and the callback to compute connection settings
+     * will re-trigger.
      */
     await sleep(1000)
     const users = await knexInstance.table('users').select('*')
@@ -245,7 +266,7 @@ test.group('Patch knex', (group) => {
     assert.lengthOf(users, 0)
   }).timeout(6000)
 
-  test('re-use same connection when in transaction', async (assert) => {
+  test('do not re-acquire connection in transaction', async (assert) => {
     let counter = 0
 
     const knexInstance = knex(getKnexConfig())
@@ -265,5 +286,6 @@ test.group('Patch knex', (group) => {
     await trx.rollback()
 
     assert.lengthOf(users, 1)
+    assert.equal(counter, 1)
   }).timeout(6000)
 })

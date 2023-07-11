@@ -16,18 +16,17 @@
 export function acquireRawConnection(): Promise<any> {
   const client = this
   const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
+  connection.on('error', (err: Error) => {
+    connection.__knex__disposed = err
+  })
+
+  connection.on('end', (err: Error) => {
+    connection.__knex__disposed = err || 'Connection ended unexpectedly'
+  })
 
   return connection
     .connect()
     .then(() => {
-      connection.on('error', (err: Error) => {
-        connection.__knex__disposed = err
-      })
-
-      connection.on('end', (err: Error) => {
-        connection.__knex__disposed = err || 'Connection ended unexpectedly'
-      })
-
       if (!client.version) {
         return client.checkVersion(connection).then(function (version: string) {
           client.version = version

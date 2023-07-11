@@ -45,6 +45,7 @@ const dialects = {
   mysql2: 'mysql',
   oracledb: 'oracledb',
   postgres: 'pg',
+  pgnative: 'pg',
   redshift: 'pg',
 }
 

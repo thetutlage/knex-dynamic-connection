@@ -1,60 +1,78 @@
-version: '3.4'
+version: '3.8'
+
 services:
-  mysql:
+  legacy_mysql:
     platform: linux/x86_64
     image: mysql:5.7
-    restart: always
+    container_name: legacy_mysql
+    env_file: ./.env
     environment:
-      MYSQL_DATABASE: lucid
-      MYSQL_USER: virk
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
+      - MYSQL_USER=$LEGACY_MYSQL_USER
+      - MYSQL_PASSWORD=$LEGACY_MYSQL_PASSWORD
+      - MYSQL_DATABASE=$LEGACY_MYSQL_DATABASE
+      - MYSQL_ROOT_PASSWORD=$LEGACY_MYSQL_PASSWORD
     ports:
-      - '3306:3306'
+      - $LEGACY_MYSQL_PORT:3306
     expose:
-      - '3306'
-  mysql_read:
+      - $LEGACY_MYSQL_PORT
+  legacy_mysql_read_replica:
     platform: linux/x86_64
     image: mysql:5.7
-    restart: always
+    container_name: legacy_mysql_read_replica
+    env_file: ./.env
     environment:
-      MYSQL_DATABASE: lucid
-      MYSQL_USER: virk
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
+      - MYSQL_USER=$LEGACY_MYSQL_READ_REPLICA_USER
+      - MYSQL_PASSWORD=$LEGACY_MYSQL_READ_REPLICA_PASSWORD
+      - MYSQL_DATABASE=$LEGACY_MYSQL_READ_REPLICA_DATABASE
+      - MYSQL_ROOT_PASSWORD=$LEGACY_MYSQL_READ_REPLICA_PASSWORD
     ports:
-      - 3304:3306
+      - $LEGACY_MYSQL_READ_REPLICA_PORT:3306
     expose:
-      - '3306'
+      - $LEGACY_MYSQL_READ_REPLICA_PORT
   pg:
     image: postgres:11
-    restart: always
+    container_name: pg
+    env_file: ./.env
     environment:
-      POSTGRES_DB: lucid
-      POSTGRES_USER: virk
-      POSTGRES_PASSWORD: password
+      - POSTGRES_DB=$PG_DATABASE
+      - POSTGRES_USER=$PG_USER
+      - POSTGRES_PASSWORD=$PG_PASSWORD
     ports:
-      - 5432:5432
-  pg_read:
+      - $PG_PORT:5432
+    expose:
+      - $PG_PORT
+  pg_read_replica:
     image: postgres:11
-    restart: always
+    container_name: pg_read_replica
+    env_file: ./.env
     environment:
-      POSTGRES_DB: lucid
-      POSTGRES_USER: virk
-      POSTGRES_PASSWORD: password
+      - POSTGRES_DB=$PG_READ_REPLICA_DATABASE
+      - POSTGRES_USER=$PG_READ_REPLICA_USER
+      - POSTGRES_PASSWORD=$PG_READ_REPLICA_PASSWORD
     ports:
-      - 5430:5432
+      - $PG_READ_REPLICA_PORT:5432
+    expose:
+      - $PG_READ_REPLICA_PORT
   mssql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    ports:
-      - 1433:1433
+    platform: linux/x86_64
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    env_file: ./.env
     environment:
-      SA_PASSWORD: 'arandom&233password'
-      ACCEPT_EULA: 'true'
-  mssql_read:
-    image: mcr.microsoft.com/mssql/server:2017-latest
+      - SA_PASSWORD=$MSSQL_PASSWORD
+      - ACCEPT_EULA='Y'
     ports:
-      - 1431:1433
+      - $MSSQL_PORT:1433
+    expose:
+      - $MSSQL_PORT
+  mssql_read_replica:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql_read_replica
+    env_file: ./.env
     environment:
-      SA_PASSWORD: 'arandom&233password'
-      ACCEPT_EULA: 'true'
+      - SA_PASSWORD=$MSSQL_READ_REPLICA_PASSWORD
+      - ACCEPT_EULA='Y'
+    ports:
+      - $MSSQL_READ_REPLICA_PORT:1433
+    expose:
+      - $MSSQL_READ_REPLICA_PORT
