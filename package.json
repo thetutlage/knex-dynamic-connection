@@ -19,6 +19,9 @@
     "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json thetutlage/knex-dynamic-connection",
     "format": "prettier --write ."
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/thetutlage/knex-dynamic-connection.git"
