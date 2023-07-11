@@ -92,7 +92,7 @@ jobs:
       - name: Install
         run: npm install
       - name: Run Mysql Tests
-        run: npm run ${{command}}
+        run: npm run ${{matrix.mysql.command}}
   test-mssql:
     runs-on: ubuntu-latest
     strategy:
