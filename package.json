@@ -38,25 +38,25 @@
   "homepage": "https://github.com/thetutlage/knex-dynamic-connection#readme",
   "devDependencies": {
     "@adonisjs/mrm-preset": "^5.0.3",
-    "@types/node": "^20.2.3",
+    "@types/node": "^20.4.1",
     "del-cli": "^5.0.0",
     "doctoc": "^2.2.1",
-    "eslint": "^8.41.0",
+    "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-adonis": "^2.1.1",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "github-label-sync": "^2.3.1",
     "husky": "^8.0.3",
     "japa": "^4.0.0",
-    "mrm": "^4.1.14",
+    "mrm": "^4.1.17",
     "mysql": "^2.18.1",
-    "mysql2": "^3.3.1",
-    "np": "^7.7.0",
-    "pg": "^8.11.0",
-    "prettier": "^2.8.8",
-    "tedious": "^16.1.0",
+    "mysql2": "^3.5.1",
+    "np": "^8.0.4",
+    "pg": "^8.11.1",
+    "prettier": "^3.0.0",
+    "tedious": "^16.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.6"
   },
   "nyc": {
     "exclude": [
@@ -85,7 +85,7 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "knex": "^2.4.2"
+    "knex": "^2.5.0"
   },
   "np": {
     "contents": ".",
