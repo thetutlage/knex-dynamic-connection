@@ -2,20 +2,58 @@ name: test
 on:
   - push
   - pull_request
+
 jobs:
-  linux:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npx tsc
+
+  test-postgres:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node-version:
-          - 20.x
+        node-version: [16]
+        postgres-version: [11]
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres-version }}
+        env:
+          POSTGRES_DB: patch_knex
+          POSTGRES_USER: virk
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+      postgres:
+        image: postgres:${{ matrix.postgres-version }}
+        env:
+          POSTGRES_DB: patch_knex
+          POSTGRES_USER: virk
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5433:5432
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
         run: npm install
-      - name: Run tests
-        run: npm test
+      - name: Run Postgres Tests
+        run: npm run test:pg
