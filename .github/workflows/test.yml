@@ -40,7 +40,7 @@ jobs:
           POSTGRES_PASSWORD: secret
         ports:
           - 5432:5432
-      postgres:
+      postgres_replica:
         image: postgres:${{ matrix.postgres-version }}
         env:
           POSTGRES_DB: patch_knex
