@@ -57,3 +57,39 @@ jobs:
         run: npm install
       - name: Run Postgres Tests
         run: npm run test:pg
+
+  test-mysql:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mysql: [5.7]
+        node-version: [16]
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql }}
+        env:
+          MYSQL_DATABASE: patch_knex
+          MYSQL_USER: virk
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: secret
+        ports:
+          - '3306:3306'
+      mysql_replica:
+        image: mysql:${{ matrix.mysql }}
+        env:
+          MYSQL_DATABASE: patch_knex
+          MYSQL_USER: virk
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: secret
+        ports:
+          - '3307:3306'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+      - name: Run Mysql Tests
+        run: npm run test:mysql
