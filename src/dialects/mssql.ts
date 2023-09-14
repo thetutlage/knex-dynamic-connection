@@ -11,7 +11,7 @@ const debug = require('debug')('knex:patched:mssql')
 import { setHiddenProperty } from 'knex/lib/util/security.js'
 
 function isNil(value: any): boolean {
-  return value !== undefined && value !== null
+  return value === undefined || value === null
 }
 
 /**
