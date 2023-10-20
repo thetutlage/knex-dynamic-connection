@@ -83,8 +83,9 @@ export function patchKnex(
    * 1. Uses `client.getRuntimeConnectionSettings` vs `client.connectionSettings`
    *    to get a new connection host for read replicas.
    */
-  client.acquireRawConnection =
-    require(`./src/dialects/${dialects[clientName]}`).acquireRawConnection
+  client.acquireRawConnection = require(
+    `./src/dialects/${dialects[clientName]}`
+  ).acquireRawConnection
 
   /**
    * Returns a dynamic connection to be used for each query
