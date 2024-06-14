@@ -61,9 +61,9 @@ export function patchKnex(
   const clientName = resolveClientNameWithAliases(client.config.client)
 
   /**
-   * Do not patch for sqlite3
+   * Do not patch for sqlite3 or unknown clients registers as classes
    */
-  if (['sqlite3', 'better-sqlite3'].includes(clientName)) {
+  if (typeof clientName !== 'string' || ['sqlite3', 'better-sqlite3'].includes(clientName)) {
     return
   }
 
