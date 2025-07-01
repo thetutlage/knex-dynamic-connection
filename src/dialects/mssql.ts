@@ -95,7 +95,7 @@ function generateConnection(settings: any) {
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
 export async function acquireRawConnection(): Promise<any> {
-debug('connection::connection new connection requested')
+  debug('connection::connection new connection requested')
   const connectionSettings = await this.getRuntimeConnectionSettings()
   return new Promise((resolver, rejecter) => {
     const Driver = this._driver()
