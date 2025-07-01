@@ -13,9 +13,9 @@
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
 /* eslint no-shadow: "off" */
-export function acquireRawConnection(): Promise<any> {
+export async function acquireRawConnection(): Promise<any> {
   const client = this
-  const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
+  const connection = new client.driver.Client(await client.getRuntimeConnectionSettings())
   connection.on('error', (err: Error) => {
     connection.__knex__disposed = err
   })

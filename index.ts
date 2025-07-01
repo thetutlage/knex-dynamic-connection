@@ -55,7 +55,7 @@ const dialects = {
  */
 export function patchKnex(
   knex: Knex,
-  configFn: (config: Knex.Config) => Knex.ConnectionConfig
+  configFn: (config: Knex.Config) => Knex.ConnectionConfig | Promise<Knex.ConnectionConfig>
 ): void {
   const client = knex.client
   const clientName = resolveClientNameWithAliases(client.config.client)
@@ -90,8 +90,9 @@ export function patchKnex(
   /**
    * Returns a dynamic connection to be used for each query
    */
-  client.getRuntimeConnectionSettings =
-    function getRuntimeConnectionSettings(): Knex.ConnectionConfig {
-      return configFn(this.config)
-    }
+  client.getRuntimeConnectionSettings = function getRuntimeConnectionSettings():
+    | Knex.ConnectionConfig
+    | Promise<Knex.ConnectionConfig> {
+    return configFn(this.config)
+  }
 }
