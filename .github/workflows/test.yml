@@ -7,20 +7,20 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 24.x
       - run: npm install
       - run: npm run lint
 
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 24.x
       - run: npm install
       - run: npx tsc
 
@@ -29,8 +29,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16]
+        node-version: [24.x]
         postgres-version: [11]
+        postgres-version: [13]
     services:
       postgres:
         image: postgres:${{ matrix.postgres-version }}
@@ -49,8 +50,8 @@ jobs:
         ports:
           - 5433:5432
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
@@ -64,7 +65,7 @@ jobs:
       fail-fast: false
       matrix:
         mysql: [{ version: 5.7, command: 'test:mysql' }, { version: 5.7, command: 'test:mysql2' }]
-        node-version: [16]
+        node-version: [24.x]
     services:
       mysql:
         image: mysql:${{ matrix.mysql.version }}
@@ -85,8 +86,8 @@ jobs:
         ports:
           - '3307:3306'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
@@ -98,7 +99,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16]
+        node-version: [24.x]
     services:
       mssql:
         image: mcr.microsoft.com/mssql/server:2019-latest
@@ -115,8 +116,8 @@ jobs:
         ports:
           - '1434:1433'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
