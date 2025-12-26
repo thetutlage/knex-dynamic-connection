@@ -11,7 +11,7 @@
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-function acquireRawConnection(this) {
+function acquireRawConnection() {
   return new Promise((resolver, rejecter) => {
     const connection = this.driver.createConnection(this.getRuntimeConnectionSettings())
     connection.on('error', (err) => {

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-const { test } = require('@japa/runner')
 const knex = require('knex')
+const { test } = require('@japa/runner')
 const { setHiddenProperty } = require('knex/lib/util/security.js')
 const { patchKnex } = require('../index.js')
 const dotenv = require('dotenv')

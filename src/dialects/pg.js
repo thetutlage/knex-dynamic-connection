@@ -1,4 +1,3 @@
-
 /*
  * knex-dynamic-connection
  *
@@ -12,7 +11,7 @@
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-function acquireRawConnection(this) {
+function acquireRawConnection() {
   const client = this
   const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
   connection.on('error', (err) => {
