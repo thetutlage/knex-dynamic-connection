@@ -230,7 +230,8 @@ test.group('Patch knex', (group) => {
       return config.connection
     })
 
-    await knexInstance.transaction()
+    const trx = await knexInstance.transaction()
+    await trx.commit()
   })
 
   test('use resolver when acquiring connection for schema', async ({ assert, cleanup }) => {
