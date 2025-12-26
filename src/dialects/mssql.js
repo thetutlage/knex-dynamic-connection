@@ -94,7 +94,7 @@ function generateConnection(settings) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection() {
+function acquireRawConnection() {
   return new Promise((resolver, rejecter) => {
     debug('connection::connection new connection requested')
 
@@ -128,3 +128,5 @@ export function acquireRawConnection() {
     })
   })
 }
+
+exports.acquireRawConnection = acquireRawConnection

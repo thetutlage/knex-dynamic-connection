@@ -90,7 +90,7 @@ function readStream(stream, type) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection() {
+function acquireRawConnection() {
   const client = this
 
   const asyncConnection = new Promise(function (resolver, rejecter) {
@@ -256,3 +256,5 @@ export function acquireRawConnection() {
   })
   return asyncConnection
 }
+
+exports.acquireRawConnection = acquireRawConnection
