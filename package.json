@@ -2,8 +2,13 @@
   "name": "knex-dynamic-connection",
   "version": "3.2.0",
   "description": "Adds support for dynamically returning connection config for knex queries",
+  "main": "build/index.js",
+  "files": [
+    "build/src",
+    "build/index.d.ts",
+    "build/index.js"
+  ],
   "scripts": {
-    "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
     "test:mysql": "DIALECT=mysql node japaFile.js",
     "test:mysql2": "DIALECT=mysql2 node japaFile.js",
@@ -16,11 +21,10 @@
     "commit": "git-cz",
     "release": "np",
     "version": "npm run build",
-    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json thetutlage/knex-dynamic-connection",
     "format": "prettier --write ."
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=24.0.0"
   },
   "repository": {
     "type": "git",
@@ -37,59 +41,51 @@
   },
   "homepage": "https://github.com/thetutlage/knex-dynamic-connection#readme",
   "devDependencies": {
-    "@adonisjs/mrm-preset": "^5.0.3",
+    "@adonisjs/eslint-config": "^3.0.0-next.7",
+    "@adonisjs/prettier-config": "^1.4.5",
+    "@adonisjs/tsconfig": "^2.0.0-next.3",
+    "@release-it/conventional-changelog": "^10.0.4",
     "@types/node": "^25.0.3",
     "del-cli": "^7.0.0",
-    "doctoc": "^2.2.1",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-adonis": "^2.1.1",
-    "eslint-plugin-prettier": "^5.5.4",
-    "github-label-sync": "^3.0.0",
-    "husky": "^9.1.7",
     "japa": "^4.0.0",
-    "mrm": "^4.1.22",
     "mysql": "^2.18.1",
     "mysql2": "^3.16.0",
-    "np": "^10.2.0",
     "pg": "^8.16.3",
     "prettier": "^3.7.4",
+    "release-it": "^19.2.1",
     "tedious": "^19.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
-  },
-  "nyc": {
-    "exclude": [
-      "test"
-    ],
-    "extension": [
-      ".ts"
-    ]
-  },
-  "main": "build/index.js",
-  "files": [
-    "build/src",
-    "build/index.d.ts",
-    "build/index.js"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "doctoc README.md --title='## Table of contents' && git add README.md",
-      "commit-msg": "node ./node_modules/@adonisjs/mrm-preset/validateCommit/conventional/validate.js"
-    }
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
   },
   "dependencies": {
     "debug": "^4.4.3",
     "knex": "^3.1.0"
   },
-  "np": {
-    "contents": ".",
-    "anyBranch": false
-  }
+  "release-it": {
+    "git": {
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
+      "commitMessage": "chore(release): ${version}",
+      "tagAnnotation": "v${version}",
+      "push": true,
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": true,
+      "skipChecks": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
+    }
+  },
+  "prettier": "@adonisjs/prettier-config"
 }
