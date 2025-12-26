@@ -1,5 +1,5 @@
-import { configPkg } from '@adonisjs/eslint-config'
+const { configPkg } = require('@adonisjs/eslint-config')
 
-export default configPkg({
+module.exports = configPkg({
   ignores: ['coverage'],
 })
