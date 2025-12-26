@@ -2,11 +2,11 @@
   "name": "knex-dynamic-connection",
   "version": "3.2.0",
   "description": "Adds support for dynamically returning connection config for knex queries",
-  "main": "build/index.js",
+  "main": "index.js",
   "files": [
-    "build/src",
-    "build/index.d.ts",
-    "build/index.js"
+    "src",
+    "index.d.ts",
+    "index.js"
   ],
   "type": "commonjs",
   "scripts": {
@@ -16,12 +16,7 @@
     "test:mssql": "DIALECT=mssql node --enable-source-maps bin/test.js",
     "test:pg": "DIALECT=pg node --enable-source-maps bin/test.js",
     "lint": "eslint . --ext=.ts",
-    "clean": "del build",
-    "compile": "npm run lint && npm run clean && tsc",
-    "build": "npm run compile",
-    "commit": "git-cz",
-    "release": "np",
-    "version": "npm run build",
+    "release": "npx release-it",
     "format": "prettier --write ."
   },
   "engines": {
