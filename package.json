@@ -8,13 +8,13 @@
     "build/index.d.ts",
     "build/index.js"
   ],
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "pretest": "npm run lint",
-    "test:mysql": "DIALECT=mysql node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts",
-    "test:mysql2": "DIALECT=mysql2 node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts",
-    "test:mssql": "DIALECT=mssql node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts",
-    "test:pg": "DIALECT=pg node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts",
+    "test:mysql": "DIALECT=mysql node --enable-source-maps bin/test.js",
+    "test:mysql2": "DIALECT=mysql2 node --enable-source-maps bin/test.js",
+    "test:mssql": "DIALECT=mssql node --enable-source-maps bin/test.js",
+    "test:pg": "DIALECT=pg node --enable-source-maps bin/test.js",
     "lint": "eslint . --ext=.ts",
     "clean": "del build",
     "compile": "npm run lint && npm run clean && tsc",

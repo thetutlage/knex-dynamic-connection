@@ -33,8 +33,7 @@
  * we still have one line of code change. Rest is just a copy/paste
  */
 
-import { type Knex } from 'knex'
-import { resolveClientNameWithAliases } from 'knex/lib/util/helpers.js'
+const { resolveClientNameWithAliases } = require('knex/lib/util/helpers.js')
 
 /**
  * Dialects with their `acquireRawConnection` implementation
@@ -53,10 +52,7 @@ const dialects = {
  * Patches the knex client so that it makes use of a resolver function to
  * resolve the config before making a SQL query.
  */
-export function patchKnex(
-  knex: Knex,
-  configFn: (config: Knex.Config) => Knex.ConnectionConfig
-): void {
+function patchKnex(knex, configFn) {
   const client = knex.client
   const clientName = resolveClientNameWithAliases(client.config.client)
 
@@ -90,8 +86,9 @@ export function patchKnex(
   /**
    * Returns a dynamic connection to be used for each query
    */
-  client.getRuntimeConnectionSettings =
-    function getRuntimeConnectionSettings(): Knex.ConnectionConfig {
-      return configFn(this.config)
-    }
+  client.getRuntimeConnectionSettings = function getRuntimeConnectionSettings() {
+    return configFn(this.config)
+  }
 }
+
+exports.patchKnex = patchKnex

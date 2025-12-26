@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-shadow */
+
 /*
  * knex-dynamic-connection
  *
@@ -13,14 +13,14 @@
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
 /* eslint no-shadow: "off" */
-export function acquireRawConnection(): Promise<any> {
+export function acquireRawConnection(this) {
   const client = this
   const connection = new client.driver.Client(client.getRuntimeConnectionSettings())
-  connection.on('error', (err: Error) => {
+  connection.on('error', (err) => {
     connection.__knex__disposed = err
   })
 
-  connection.on('end', (err: Error) => {
+  connection.on('end', (err) => {
     connection.__knex__disposed = err || 'Connection ended unexpectedly'
   })
 
@@ -28,7 +28,7 @@ export function acquireRawConnection(): Promise<any> {
     .connect()
     .then(() => {
       if (!client.version) {
-        return client.checkVersion(connection).then(function (version: string) {
+        return client.checkVersion(connection).then(function (version) {
           client.version = version
           return connection
         })

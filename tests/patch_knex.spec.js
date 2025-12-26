@@ -7,23 +7,22 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
-import { type Knex, default as knex } from 'knex'
-import { setHiddenProperty } from 'knex/lib/util/security.js'
-
-import { patchKnex } from '../index.ts'
-import dotenv from 'dotenv'
+const { test } = require('@japa/runner')
+const knex = require('knex')
+const { setHiddenProperty } = require('knex/lib/util/security.js')
+const { patchKnex } = require('../index.js')
+const dotenv = require('dotenv')
 
 dotenv.config()
 
 /**
  * Sleep for a given time
  */
-function sleep(time: number): Promise<void> {
+function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 
-function getKnexConfig(): Knex.Config {
+function getKnexConfig() {
   switch (process.env.DIALECT) {
     case 'pg':
       return {
@@ -89,7 +88,7 @@ function getKnexConfig(): Knex.Config {
   }
 }
 
-function getKnexConfigReplica(): Knex.Config {
+function getKnexConfigReplica() {
   switch (process.env.DIALECT) {
     case 'pg':
       return {
@@ -187,7 +186,7 @@ test.group('Patch knex', (group) => {
       setHiddenProperty(registeredConfig)
 
       assert.deepEqual(config.connection, registeredConfig)
-      return config.connection as Knex.ConnectionConfig
+      return config.connection
     })
 
     await knexInstance.select('*').from('users')
@@ -202,7 +201,7 @@ test.group('Patch knex', (group) => {
       setHiddenProperty(registeredConfig)
 
       assert.deepEqual(config.connection, registeredConfig)
-      return config.connection as Knex.ConnectionConfig
+      return config.connection
     })
 
     await knexInstance.raw('SELECT 1 + 1;')
@@ -217,7 +216,7 @@ test.group('Patch knex', (group) => {
       setHiddenProperty(registeredConfig)
 
       assert.deepEqual(config.connection, registeredConfig)
-      return config.connection as Knex.ConnectionConfig
+      return config.connection
     })
 
     await knexInstance.transaction()
@@ -232,7 +231,7 @@ test.group('Patch knex', (group) => {
       setHiddenProperty(registeredConfig)
 
       assert.deepEqual(config.connection, registeredConfig)
-      return config.connection as Knex.ConnectionConfig
+      return config.connection
     })
 
     await knexInstance.schema.hasTable('users')
@@ -245,10 +244,10 @@ test.group('Patch knex', (group) => {
     patchKnex(knexInstance, (config) => {
       counter++
       if (counter === 2) {
-        return getKnexConfigReplica().connection as Knex.ConnectionConfig
+        return getKnexConfigReplica().connection
       }
 
-      return config.connection as Knex.ConnectionConfig
+      return config.connection
     })
 
     await knexInstance.table('users').insert({ username: 'virk' })
@@ -274,9 +273,9 @@ test.group('Patch knex', (group) => {
     patchKnex(knexInstance, (config) => {
       counter++
       if (counter === 2) {
-        return getKnexConfigReplica().connection as Knex.ConnectionConfig
+        return getKnexConfigReplica().connection
       }
-      return config.connection as Knex.ConnectionConfig
+      return config.connection
     })
 
     const trx = await knexInstance.transaction()

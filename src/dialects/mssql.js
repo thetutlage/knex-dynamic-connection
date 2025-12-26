@@ -8,9 +8,9 @@
  */
 
 const debug = require('debug')('knex:patched:mssql')
-import { setHiddenProperty } from 'knex/lib/util/security.js'
+const { setHiddenProperty } = require('knex/lib/util/security.js')
 
-function isNil(value: any): boolean {
+function isNil(value) {
   return value === undefined || value === null
 }
 
@@ -22,11 +22,11 @@ function isNil(value: any): boolean {
  * please report it to us. Right now, this method is pure.
  * Also, ignore "this.connectionSettings"
  */
-function generateConnection(settings: any) {
+function generateConnection(settings) {
   settings.options = settings.options || {}
 
   /** @type {import('tedious').ConnectionConfig} */
-  const cfg: any = {
+  const cfg = {
     authentication: {
       type: settings.type || 'default',
       options: {
@@ -94,7 +94,7 @@ function generateConnection(settings: any) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection(): Promise<any> {
+export function acquireRawConnection() {
   return new Promise((resolver, rejecter) => {
     debug('connection::connection new connection requested')
 
@@ -103,7 +103,7 @@ export function acquireRawConnection(): Promise<any> {
 
     const connection = new Driver.Connection(settings)
 
-    connection.connect((err: Error) => {
+    connection.connect((err) => {
       if (err) {
         debug('connection::connect error: %s', err.message)
         return rejecter(err)
@@ -112,7 +112,7 @@ export function acquireRawConnection(): Promise<any> {
       debug('connection::connect connected to server')
 
       connection.connected = true
-      connection.on('error', (e: Error) => {
+      connection.on('error', (e) => {
         debug('connection::error message=%s', e.message)
         connection.__knex__disposed = e
         connection.connected = false

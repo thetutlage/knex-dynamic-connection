@@ -11,14 +11,14 @@
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection(): Promise<any> {
+export function acquireRawConnection(this) {
   return new Promise((resolver, rejecter) => {
     const connection = this.driver.createConnection(this.getRuntimeConnectionSettings())
-    connection.on('error', (err: Error) => {
+    connection.on('error', (err) => {
       connection.__knex__disposed = err
     })
 
-    connection.connect((err: Error) => {
+    connection.connect((err) => {
       if (err) {
         // if connection is rejected, remove listener that was registered above...
         connection.removeAllListeners()

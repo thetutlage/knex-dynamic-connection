@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 /*
  * knex-dynamic-connection
  *
@@ -8,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import stream from 'node:stream'
-import { promisify } from 'node:util'
-import { isConnectionError } from 'knex/lib/dialects/oracledb/utils'
+const stream = require('node:stream')
+const { promisify } = require('node:util')
+const { isConnectionError } = require('knex/lib/dialects/oracledb/utils')
 
 /**
  * Copy/pasted as it is from
@@ -22,7 +21,7 @@ const lobProcessing = function (stream) {
   /**
    * @type 'string' | 'buffer'
    */
-  let type: any
+  let type
 
   if (stream.type) {
     // v1.2-v4
@@ -51,7 +50,7 @@ const lobProcessing = function (stream) {
  * Copy/pasted as it is from
  * https://github.com/knex/knex/blob/master/lib/dialects/oracledb/index.js#L424
  */
-function resolveConnectString(connectionSettings: any) {
+function resolveConnectString(connectionSettings) {
   if (connectionSettings.connectString) {
     return connectionSettings.connectString
   }
@@ -91,7 +90,7 @@ function readStream(stream, type) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-export function acquireRawConnection(): Promise<any> {
+export function acquireRawConnection() {
   const client = this
 
   const asyncConnection = new Promise(function (resolver, rejecter) {
@@ -119,14 +118,14 @@ export function acquireRawConnection(): Promise<any> {
 
     client.driver.fetchAsString = client.fetchAsString
 
-    client.driver.getConnection(oracleDbConfig, function (err: Error, connection: any) {
+    client.driver.getConnection(oracleDbConfig, function (err, connection) {
       if (err) {
         return rejecter(err)
       }
 
       connection.commitAsync = function () {
-        return new Promise<void>((commitResolve, commitReject) => {
-          this.commit(function (err: Error) {
+        return new Promise((commitResolve, commitReject) => {
+          this.commit(function (err) {
             if (err) {
               return commitReject(err)
             }
@@ -137,8 +136,8 @@ export function acquireRawConnection(): Promise<any> {
       }
 
       connection.rollbackAsync = function () {
-        return new Promise<void>((rollbackResolve, rollbackReject) => {
-          this.rollback(function (err: Error) {
+        return new Promise((rollbackResolve, rollbackReject) => {
+          this.rollback(function (err) {
             if (err) {
               return rollbackReject(err)
             }
@@ -156,7 +155,7 @@ export function acquireRawConnection(): Promise<any> {
         }
 
         if (options.resultSet) {
-          connection.execute(sql, bindParams || [], options, function (err: Error, result: any) {
+          connection.execute(sql, bindParams || [], options, function (err, result) {
             if (err) {
               if (isConnectionError(err)) {
                 connection.close().catch(function () {})
@@ -168,8 +167,8 @@ export function acquireRawConnection(): Promise<any> {
             const fetchResult = { rows: [], resultSet: result.resultSet }
             const numRows = 100
 
-            const fetchRowsFromRS = function (connection: any, resultSet: any, numRows: any) {
-              resultSet.getRows(numRows, function (err: Error, rows: any) {
+            const fetchRowsFromRS = function (connection, resultSet, numRows) {
+              resultSet.getRows(numRows, function (err, rows) {
                 if (err) {
                   if (isConnectionError(err)) {
                     connection.close().catch(function () {})
@@ -196,7 +195,7 @@ export function acquireRawConnection(): Promise<any> {
             fetchRowsFromRS(connection, result.resultSet, numRows)
           })
         } else {
-          connection.execute(sql, bindParams || [], options, function (err: Error, result: any) {
+          connection.execute(sql, bindParams || [], options, function (err, result) {
             if (err) {
               // dispose the connection on connection error
               if (isConnectionError(err)) {
@@ -213,7 +212,7 @@ export function acquireRawConnection(): Promise<any> {
 
       connection.executeAsync = function (sql, bindParams, options) {
         // Read all lob
-        return fetchAsync(sql, bindParams, options).then(async (results: any) => {
+        return fetchAsync(sql, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
             return results.resultSet
               ? promisify(results.resultSet.close).call(results.resultSet)
@@ -221,7 +220,7 @@ export function acquireRawConnection(): Promise<any> {
           }
 
           // Collect LOBs to read
-          const lobs: any[] = []
+          const lobs = []
           if (results.rows) {
             if (Array.isArray(results.rows)) {
               for (let i = 0; i < results.rows.length; i++) {
