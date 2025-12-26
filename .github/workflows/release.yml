@@ -1,5 +1,5 @@
 name: release
-on: workflow_call
+on: workflow_dispatch
 permissions:
   contents: write
   id-token: write
