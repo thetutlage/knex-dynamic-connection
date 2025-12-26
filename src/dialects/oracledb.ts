@@ -8,8 +8,8 @@
  * file that was distributed with this source code.
  */
 
-import stream from 'stream'
-import { promisify } from 'util'
+import stream from 'node:stream'
+import { promisify } from 'node:util'
 import { isConnectionError } from 'knex/lib/dialects/oracledb/utils'
 
 /**

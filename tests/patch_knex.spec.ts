@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
-import { Knex, default as knex } from 'knex'
+import { test } from '@japa/runner'
+import { type Knex, default as knex } from 'knex'
 import { setHiddenProperty } from 'knex/lib/util/security.js'
 
-import { patchKnex } from '../index'
+import { patchKnex } from '../index.ts'
+import dotenv from 'dotenv'
 
-require('dotenv').config()
+dotenv.config()
 
 /**
  * Sleep for a given time
@@ -155,7 +156,7 @@ function getKnexConfigReplica(): Knex.Config {
 }
 
 test.group('Patch knex', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     await knex(getKnexConfig()).schema.dropTableIfExists('users')
     await knex(getKnexConfigReplica()).schema.dropTableIfExists('users')
 
@@ -170,14 +171,14 @@ test.group('Patch knex', (group) => {
       table.string('username')
       table.timestamps()
     })
+
+    return async () => {
+      await knex(getKnexConfig()).schema.dropTable('users')
+      await knex(getKnexConfigReplica()).schema.dropTable('users')
+    }
   })
 
-  group.after(async () => {
-    await knex(getKnexConfig()).schema.dropTable('users')
-    await knex(getKnexConfigReplica()).schema.dropTable('users')
-  })
-
-  test('pass config to the resolver function', async (assert) => {
+  test('pass config to the resolver function', async ({ assert }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
@@ -192,7 +193,7 @@ test.group('Patch knex', (group) => {
     await knexInstance.select('*').from('users')
   })
 
-  test('use resolver when making raw query', async (assert) => {
+  test('use resolver when making raw query', async ({ assert }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
@@ -207,7 +208,7 @@ test.group('Patch knex', (group) => {
     await knexInstance.raw('SELECT 1 + 1;')
   })
 
-  test('use resolver when acquiring connection for transaction', async (assert) => {
+  test('use resolver when acquiring connection for transaction', async ({ assert }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
@@ -222,7 +223,7 @@ test.group('Patch knex', (group) => {
     await knexInstance.transaction()
   })
 
-  test('use resolver when acquiring connection for schema', async (assert) => {
+  test('use resolver when acquiring connection for schema', async ({ assert }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
@@ -237,7 +238,7 @@ test.group('Patch knex', (group) => {
     await knexInstance.schema.hasTable('users')
   })
 
-  test('make requests using resolver connection settings', async (assert) => {
+  test('make requests using resolver connection settings', async ({ assert }) => {
     let counter = 0
 
     const knexInstance = knex(getKnexConfig())
@@ -266,7 +267,7 @@ test.group('Patch knex', (group) => {
     assert.lengthOf(users, 0)
   }).timeout(6000)
 
-  test('do not re-acquire connection in transaction', async (assert) => {
+  test('do not re-acquire connection in transaction', async ({ assert }) => {
     let counter = 0
 
     const knexInstance = knex(getKnexConfig())

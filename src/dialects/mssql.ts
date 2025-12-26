@@ -66,7 +66,7 @@ function generateConnection(settings: any) {
     delete cfg.options.port
   }
 
-  if (isNaN(cfg.options.requestTimeout)) {
+  if (Number.isNaN(cfg.options.requestTimeout)) {
     cfg.options.requestTimeout = 15000
   }
 
