@@ -156,31 +156,38 @@ function getKnexConfigReplica() {
 
 test.group('Patch knex', (group) => {
   group.setup(async () => {
-    await knex(getKnexConfig()).schema.dropTableIfExists('users')
-    await knex(getKnexConfigReplica()).schema.dropTableIfExists('users')
+    const knexInstance = knex(getKnexConfig())
+    const knexReplicaInstance = knex(getKnexConfigReplica())
 
-    await knex(getKnexConfig()).schema.createTable('users', (table) => {
+    await knexInstance.schema.dropTableIfExists('users')
+    await knexReplicaInstance.schema.dropTableIfExists('users')
+
+    await knexInstance.schema.createTable('users', (table) => {
       table.increments('id')
       table.string('username')
       table.timestamps()
     })
 
-    await knex(getKnexConfigReplica()).schema.createTable('users', (table) => {
+    await knexReplicaInstance.schema.createTable('users', (table) => {
       table.increments('id')
       table.string('username')
       table.timestamps()
     })
 
     return async () => {
-      await knex(getKnexConfig()).schema.dropTable('users')
-      await knex(getKnexConfigReplica()).schema.dropTable('users')
+      await knexInstance.schema.dropTable('users')
+      await knexReplicaInstance.schema.dropTable('users')
+      await knexInstance.destroy()
+      await knexReplicaInstance.destroy()
     }
   })
 
-  test('pass config to the resolver function', async ({ assert }) => {
+  test('pass config to the resolver function', async ({ assert, cleanup }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
     patchKnex(knexInstance, (config) => {
       const registeredConfig = getKnexConfig().connection
       setHiddenProperty(registeredConfig)
@@ -192,10 +199,12 @@ test.group('Patch knex', (group) => {
     await knexInstance.select('*').from('users')
   })
 
-  test('use resolver when making raw query', async ({ assert }) => {
+  test('use resolver when making raw query', async ({ assert, cleanup }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
     patchKnex(knexInstance, (config) => {
       const registeredConfig = getKnexConfig().connection
       setHiddenProperty(registeredConfig)
@@ -207,10 +216,12 @@ test.group('Patch knex', (group) => {
     await knexInstance.raw('SELECT 1 + 1;')
   })
 
-  test('use resolver when acquiring connection for transaction', async ({ assert }) => {
+  test('use resolver when acquiring connection for transaction', async ({ assert, cleanup }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
     patchKnex(knexInstance, (config) => {
       const registeredConfig = getKnexConfig().connection
       setHiddenProperty(registeredConfig)
@@ -222,10 +233,12 @@ test.group('Patch knex', (group) => {
     await knexInstance.transaction()
   })
 
-  test('use resolver when acquiring connection for schema', async ({ assert }) => {
+  test('use resolver when acquiring connection for schema', async ({ assert, cleanup }) => {
     assert.plan(1)
 
     const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
     patchKnex(knexInstance, (config) => {
       const registeredConfig = getKnexConfig().connection
       setHiddenProperty(registeredConfig)
@@ -237,10 +250,12 @@ test.group('Patch knex', (group) => {
     await knexInstance.schema.hasTable('users')
   })
 
-  test('make requests using resolver connection settings', async ({ assert }) => {
+  test('make requests using resolver connection settings', async ({ assert, cleanup }) => {
     let counter = 0
 
     const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
     patchKnex(knexInstance, (config) => {
       counter++
       if (counter === 2) {
@@ -266,10 +281,12 @@ test.group('Patch knex', (group) => {
     assert.lengthOf(users, 0)
   }).timeout(6000)
 
-  test('do not re-acquire connection in transaction', async ({ assert }) => {
+  test('do not re-acquire connection in transaction', async ({ assert, cleanup }) => {
     let counter = 0
 
     const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
     patchKnex(knexInstance, (config) => {
       counter++
       if (counter === 2) {
