@@ -2,7 +2,7 @@ name: test
 on:
   - push
   - pull_request
-  - workflow_trigger
+  - workflow_dispatch
 
 jobs:
   lint:
