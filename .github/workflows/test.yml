@@ -30,8 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [24.x]
-        postgres-version: [11]
-        postgres-version: [13]
+        postgres-version: [11, 13]
     services:
       postgres:
         image: postgres:${{ matrix.postgres-version }}
