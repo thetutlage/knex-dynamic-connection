@@ -5,7 +5,7 @@ permissions:
   id-token: write
 jobs:
   checks:
-    uses: ./.github/workflows/checks.yml
+    uses: ./.github/workflows/test.yml
     secrets: inherit
   release:
     needs: checks
