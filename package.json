@@ -55,11 +55,11 @@
     "release-it": "^19.2.4",
     "tedious": "^19.2.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "debug": "^4.4.3",
-    "knex": "3.1.0"
+    "knex": "3.2.7"
   },
   "release-it": {
     "git": {
