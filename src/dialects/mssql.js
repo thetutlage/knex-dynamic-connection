@@ -94,12 +94,12 @@ function generateConnection(settings) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-function acquireRawConnection() {
+async function acquireRawConnection() {
+  debug('connection::connection new connection requested')
+  const connectionSettings = await this.getRuntimeConnectionSettings()
   return new Promise((resolver, rejecter) => {
-    debug('connection::connection new connection requested')
-
     const Driver = this._driver()
-    const settings = Object.assign({}, generateConnection(this.getRuntimeConnectionSettings()))
+    const settings = Object.assign({}, generateConnection(connectionSettings))
 
     const connection = new Driver.Connection(settings)
 
