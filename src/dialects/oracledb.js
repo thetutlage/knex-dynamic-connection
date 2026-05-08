@@ -90,12 +90,11 @@ function readStream(stream, type) {
  * Copy of `acquireRawConnection` from knex codebase, but instead relies
  * on `getRuntimeConnectionSettings` vs `connectionSettings`
  */
-function acquireRawConnection() {
+async function acquireRawConnection() {
   const client = this
+  const settings = await client.getRuntimeConnectionSettings()
 
   const asyncConnection = new Promise(function (resolver, rejecter) {
-    const settings = client.getRuntimeConnectionSettings()
-
     // If external authentication don't have to worry about username/password and
     // if not need to set the username and password
     const oracleDbConfig = settings.externalAuth

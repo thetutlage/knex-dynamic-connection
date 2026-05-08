@@ -282,6 +282,65 @@ test.group('Patch knex', (group) => {
     assert.lengthOf(users, 0)
   }).timeout(6000)
 
+  test('support async connection property in knex config', async ({ assert, cleanup }) => {
+    assert.plan(2)
+
+    let resolverCalls = 0
+    const baseConfig = getKnexConfig()
+
+    const knexInstance = knex({
+      ...baseConfig,
+      connection: async () => {
+        resolverCalls++
+        return baseConfig.connection
+      },
+    })
+    cleanup(() => knexInstance.destroy())
+
+    patchKnex(knexInstance, (config) => {
+      return typeof config.connection === 'function' ? config.connection() : config.connection
+    })
+
+    const result = await knexInstance.raw('SELECT 1 + 1 AS sum;')
+    assert.exists(result)
+    assert.isAbove(resolverCalls, 0)
+  })
+
+  test('switch hosts via async connection property', async ({ assert, cleanup }) => {
+    let counter = 0
+    const baseConfig = getKnexConfig()
+    const replicaConnection = getKnexConfigReplica().connection
+
+    const knexInstance = knex({
+      ...baseConfig,
+      connection: async () => {
+        counter++
+        if (counter === 2) {
+          return replicaConnection
+        }
+        return baseConfig.connection
+      },
+    })
+    cleanup(() => knexInstance.destroy())
+
+    patchKnex(knexInstance, (config) => config.connection())
+
+    await knexInstance.table('users').insert({ username: 'virk' })
+
+    /**
+     * Sleeping for a while, so that the pool will releases the unused
+     * connection and the callback to compute connection settings
+     * will re-trigger.
+     */
+    await sleep(1000)
+    const users = await knexInstance.table('users').select('*')
+
+    await sleep(1000)
+    await knexInstance('users').truncate()
+
+    assert.lengthOf(users, 0)
+  }).timeout(6000)
+
   test('do not re-acquire connection in transaction', async ({ assert, cleanup }) => {
     let counter = 0
 
@@ -306,4 +365,42 @@ test.group('Patch knex', (group) => {
     assert.lengthOf(users, 1)
     assert.equal(counter, 1)
   }).timeout(6000)
+
+  test('cache settings while expirationChecker returns false', async ({ assert, cleanup }) => {
+    let configCalls = 0
+    let expired = false
+
+    const knexInstance = knex(getKnexConfig())
+    cleanup(() => knexInstance.destroy())
+
+    patchKnex(knexInstance, async () => {
+      configCalls++
+      return {
+        ...getKnexConfig().connection,
+        expirationChecker: () => expired,
+      }
+    })
+
+    await knexInstance.raw('SELECT 1 + 1 AS sum;')
+
+    /**
+     * Sleeping so the pool releases the idle connection. A fresh acquire
+     * triggers `getRuntimeConnectionSettings` again — but the cached
+     * settings should be reused since the checker still returns false.
+     */
+    await sleep(1000)
+    await knexInstance.raw('SELECT 1 + 1 AS sum;')
+
+    assert.equal(configCalls, 1)
+
+    /**
+     * Flip the flag — checker now returns true. Next acquire must
+     * re-invoke `configFn` to refresh credentials.
+     */
+    expired = true
+    await sleep(1000)
+    await knexInstance.raw('SELECT 1 + 1 AS sum;')
+
+    assert.equal(configCalls, 2)
+  }).timeout(8000)
 })

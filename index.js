@@ -84,10 +84,31 @@ function patchKnex(knex, configFn) {
   ).acquireRawConnection
 
   /**
-   * Returns a dynamic connection to be used for each query
+   * Cached settings + expiration checker. Mirrors knex's
+   * `updatePoolConnectionSettingsFromProvider` so that `configFn` is only
+   * re-invoked when the previously returned `expirationChecker` reports
+   * the credentials as stale.
    */
-  client.getRuntimeConnectionSettings = function getRuntimeConnectionSettings() {
-    return configFn(this.config)
+  let cachedSettings = null
+  let expirationChecker = () => true
+
+  client.getRuntimeConnectionSettings = async function getRuntimeConnectionSettings() {
+    if (cachedSettings && expirationChecker && !expirationChecker()) {
+      return cachedSettings
+    }
+
+    const result = await configFn(this.config)
+
+    if (result && typeof result.expirationChecker === 'function') {
+      expirationChecker = result.expirationChecker
+      const { expirationChecker: _drop, ...rest } = result
+      cachedSettings = rest
+    } else {
+      expirationChecker = null
+      cachedSettings = result
+    }
+
+    return cachedSettings
   }
 }
 
