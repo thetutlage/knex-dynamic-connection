@@ -1,6 +1,6 @@
 {
   "name": "knex-dynamic-connection",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Adds support for dynamically returning connection config for knex queries",
   "main": "index.js",
   "files": [
