@@ -34,8 +34,8 @@ async function acquireRawConnection() {
 
       return connection
     })
-    .then(function setSearchPath(connection) {
-      client.setSchemaSearchPath(connection)
+    .then(async function setSearchPath(connection) {
+      await client.setSchemaSearchPath(connection)
       return connection
     })
 }
